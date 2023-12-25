@@ -59,7 +59,7 @@ const Header = ({ getAllNotes, isLoggedIn, userLoggedInData, onLogin }) => {
       ...formData,
       [name]: value,
     });
-  };
+  }
 
   const login = (e) => {
     e.preventDefault();
@@ -108,7 +108,7 @@ const Header = ({ getAllNotes, isLoggedIn, userLoggedInData, onLogin }) => {
     // fetchFromAPI('')
   }
 
-  console.log("IS login - " + isLogin);
+  // console.log("IS login - " + isLogin);
   return (
 
     <header className='bg-[#202124] sticky top-0 flex flex-row items-center justify-between'>

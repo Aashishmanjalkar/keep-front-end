@@ -9,6 +9,7 @@ export const fetchFromAPI = async (url,method,sendData = null,bearerToken = '')=
     try {
       let data = '';
       // Set up the authorization header
+      // console.log("bearer " + bearerToken);
       const config = {
         headers: {
           'Authorization': `Bearer ${bearerToken}`,
@@ -22,7 +23,14 @@ export const fetchFromAPI = async (url,method,sendData = null,bearerToken = '')=
           console.log("here");
           console.log(`${BASE_URL}/${url}`);
           data = await axios.post(`${BASE_URL}/${url}`,sendData,config);
+        } else if(method === 'put'){
+          console.log(`${BASE_URL}/${url}`);
+          data = await axios.put(`${BASE_URL}/${url}`,sendData,config);
+        }else if(method === 'delete'){
+          console.log(`${BASE_URL}/${url}`);
+          data = await axios.delete(`${BASE_URL}/${url}`,sendData,config);
         }
+        console.log("api js " , data);
         return data;
     } catch (error) {
       if (error.response) {

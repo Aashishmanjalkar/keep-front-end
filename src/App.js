@@ -14,7 +14,8 @@ function App() {
     fetchFromAPI('notes','get','',token).then(({data , status})=>{
       if(status === 200){
         if(typeof data !== "undefined"){
-          console.log("notes " + data.notes);
+          // console.log("notes " + JSON.stringify(data.notes));
+          // console.log("data " , data);
           setfetchNotes(data);
         }
       }else if (status >= 400){
@@ -36,20 +37,20 @@ function App() {
       const decoded = jwtDecode(token);
       if(decoded){
         let user = decoded.user;
-        console.log(user);
+        // console.log(user);
         setIsLoggedIn(true);
         setuserLoggedInData(user);
       }
     }
   }, [])
-  console.log(isLoggedIn);
+  // console.log(isLoggedIn);
   
   const handleLogin = () => {
     // Your login logic here
     let token = localStorage.getItem("token");
     if (token !== null) {
       const decoded = jwtDecode(token);
-      console.log(decoded);
+      // console.log(decoded);
       if(decoded){
         let user = decoded.user;
         console.log(user);
@@ -64,7 +65,7 @@ function App() {
   return (
     <>
       <Header getAllNotes={getAllNotes} onLogin={handleLogin} isLoggedIn={isLoggedIn} userLoggedInData={userLoggedInData} />
-      <Feed/>
+      <Feed getAllNotes={getAllNotes}  getNotes={fetchNote} />
     </>
   );
 }

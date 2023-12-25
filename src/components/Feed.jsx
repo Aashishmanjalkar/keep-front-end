@@ -1,33 +1,63 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import LeftNav from './LeftNav';
+import NoteList from './NoteList';
+import { fetchFromAPI } from '../backend-connect/api';
 
-const Feed = () => {
+const Feed = ({ getNotes,getAllNotes }) => {
   const [hidden, setHidden] = useState(true);
-  const hidInput =()=>{
-    console.log("clicked");
+  const hidInput = () => {
     setHidden(false);
-  } 
-  const addNote =()=>{
+  }
+
+  const [noteData, setNoteData] = useState({
+    title: '',
+    note: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNoteData({
+      ...noteData,
+      [name]: value,
+    });
+  }
+
+  const addNote = () => {
     setHidden(true);
+    let token = localStorage.getItem("token");
+    // let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJOYW1lIjoicm9iaWsxMSIsImVtYWlsIjoidGVzdDRAbWFpbC5jb20iLCJpZCI6IjY1MmJmZjY2ZGFjNzg1MmY2ZDY4MTgzOCJ9LCJpYXQiOjE3MDM0MDA1ODAsImV4cCI6MTcwNTEyODU4MH0.M09O9fdl_mUd2CenSDnNY8NkZENoRQ5ukP6Cakmpw-M';
+    fetchFromAPI('notes', 'post', JSON.stringify(noteData), token).then(({ data, status }) => {
+      if(status === 200){
+        getAllNotes(token);
+        setNoteData({
+          title: '',
+          note: ''
+        })
+      }
+    });
   }
   return (
     <>
-        <div className='flex flex-row h-[calc(100%-71px)] bg-[#202124]'>
-            <LeftNav/>
-            <div className='grow flex justify-center items-center border-2 border-[red] h-52 bg-[#202124]'>
-                <input type="text" onClick={hidInput} className={`h-16 ${hidden===false ? "hidden" : ""} rounded-xl outline-none border text-white text-lg border-[white] w-[43rem] p-2 pl-4 placeholder:font-bold  bg-[#202124]`} placeholder='Take a note....' />
-                <div className={`flex ${hidden ? "hidden" : ""} mt-4 border rounded-xl border-[#7c7a7a]`}>
-                  <div className="flex flex-col">
-                    <input type="text" className='text-white outline-none bg-transparent w-[43rem] h-14 rounded-xl m-2 p-2 placeholder:text-lg placeholder:font-bold' placeholder='Title' />
-                    <input type="text" className='text-white outline-none bg-transparent w-[43rem] h-14 rounded-xl m-2 p-2 placeholder:font-bold' placeholder='Take a note...' />
-                    <button type='submit' onClick={addNote} className='text-white text-right mr-4 text-lg font-semibold'>Close</button>
-                  </div>
-                </div>
+      <div className='flex flex-row bg-[#202124]'>
+        <LeftNav />
 
+        <div className='grow flex flex-col border-2 border-[red] w-full bg-[#202124]'>
+          <div className="h-52 pt-10 flex items-center justify-center">
+            <input type="text" onClick={hidInput} className={`h-20 ${hidden === false ? "hidden" : ""} rounded-xl outline-none border text-white text-lg border-[white] w-[43rem] p-2 pl-4 placeholder:font-bold  bg-[#202124]`} placeholder='Take a note....' />
+            <div className={`flex flex-col ${hidden ? "hidden" : ""} mt-4 border rounded-xl border-[#7c7a7a]`}>
+              <div className="flex flex-col">
+                <input type="text" className='text-white outline-none bg-transparent w-[43rem] h-14 rounded-xl m-2 p-2 placeholder:text-lg placeholder:font-bold' onChange={handleChange} value={noteData.title} name='title' placeholder='Title' />
+                <input type="text" className='text-white outline-none bg-transparent w-[43rem] h-14 rounded-xl m-2 p-2 placeholder:font-bold' onChange={handleChange} name='note' value={noteData.note} placeholder='Take a note...' />
+                <button type='submit' onClick={addNote} className='text-white pb-2 text-right mr-4 text-lg font-semibold'>Close</button>
+              </div>
             </div>
-            
+          </div>
+          <div className="mt-12">
+            <NoteList notes={getNotes.notes} getAllNotes={getAllNotes} />
+          </div>
         </div>
-     
+
+      </div>
     </>
   )
 }
