@@ -30,7 +30,7 @@ const NoteList = ({ notes ,getAllNotes}) => {
     }
     const updateNote = (selectedNote) => {
         let token = localStorage.getItem("token");
-        fetchFromAPI(`notes/${selectedNote?._id}`, 'put', JSON.stringify(noteData), token).then(({ data, status }) => {
+        fetchFromAPI(`notes/${selectedNote?._id}`, 'put', JSON.stringify(selectedNote), token).then(({ data, status }) => {
           if(status === 200){
             getAllNotes(token);
             setNoteData({

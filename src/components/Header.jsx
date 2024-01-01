@@ -1,12 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { RxHamburgerMenu } from "react-icons/rx";
-// import {SiGooglekeep} from "react-icons/si";
 import { AiOutlineSearch, AiOutlineClose, AiOutlineSetting } from 'react-icons/ai';
 import { IoIosRefresh } from 'react-icons/io';
 import { PiDotsNineBold } from 'react-icons/pi';
 import googleicon from '../google-keep-icon.svg';
 import { fetchFromAPI } from "../backend-connect/api";
 import { jwtDecode } from "jwt-decode";
+import PopUpComponent from './PopUpComponent';
 
 const Header = ({ getAllNotes, isLoggedIn, userLoggedInData, onLogin }) => {
   const listElement = useRef(null);
@@ -92,7 +92,6 @@ const Header = ({ getAllNotes, isLoggedIn, userLoggedInData, onLogin }) => {
     e.preventDefault();
     fetchFromAPI('user/register', 'post', JSON.stringify(formData)).then(({ data, status }) => {
       const token = data.accessToken;
-      const decoded = jwtDecode(token);
       localStorage.setItem('token', token);
       if (status === 200) {
         listElement.current.classList.add('hidden');
@@ -104,11 +103,10 @@ const Header = ({ getAllNotes, isLoggedIn, userLoggedInData, onLogin }) => {
   };
 
   const signOut = (e) =>{
-    e.preventDefault();
-    // fetchFromAPI('')
+    localStorage.removeItem('token');
+    window.location.reload(false);
   }
 
-  // console.log("IS login - " + isLogin);
   return (
 
     <header className='bg-[#202124] sticky top-0 flex flex-row items-center justify-between'>
@@ -126,7 +124,7 @@ const Header = ({ getAllNotes, isLoggedIn, userLoggedInData, onLogin }) => {
           </div>
           <input type="text"
             // className='bg-transparent outline-none text-white pr-5 pl-5 md:pl-0 w-44 md:group-focus-within:pl-0 md:w-64 lg:w-[500px] placeholder:text-slate-400 placeholder:text-base'
-            className='placeholder:text-white  h-10 bg-transparent outline-none w-[750px]'
+            className='placeholder:text-white  h-10 bg-transparent outline-none  lg:w-[750px] md:w-[400px] sm:w-[100px]'
             placeholder='Search'
           />
           <div className='w-10 items-center justify-center'>
@@ -253,7 +251,9 @@ const Header = ({ getAllNotes, isLoggedIn, userLoggedInData, onLogin }) => {
         </div>
       </div>
 
-
+      <div className="pop-up">
+        <PopUpComponent />
+      </div>
 
     </header>
   )

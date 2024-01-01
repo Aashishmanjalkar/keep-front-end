@@ -25,7 +25,6 @@ const Feed = ({ getNotes,getAllNotes }) => {
   const addNote = () => {
     setHidden(true);
     let token = localStorage.getItem("token");
-    // let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJOYW1lIjoicm9iaWsxMSIsImVtYWlsIjoidGVzdDRAbWFpbC5jb20iLCJpZCI6IjY1MmJmZjY2ZGFjNzg1MmY2ZDY4MTgzOCJ9LCJpYXQiOjE3MDM0MDA1ODAsImV4cCI6MTcwNTEyODU4MH0.M09O9fdl_mUd2CenSDnNY8NkZENoRQ5ukP6Cakmpw-M';
     fetchFromAPI('notes', 'post', JSON.stringify(noteData), token).then(({ data, status }) => {
       if(status === 200){
         getAllNotes(token);
@@ -41,7 +40,7 @@ const Feed = ({ getNotes,getAllNotes }) => {
       <div className='flex flex-row bg-[#202124]'>
         <LeftNav />
 
-        <div className='grow flex flex-col border-2 border-[red] w-full bg-[#202124]'>
+        <div className='grow flex flex-col border-t-[#525355] border-t-2 w-full bg-[#202124]'>
           <div className="h-52 pt-10 flex items-center justify-center">
             <input type="text" onClick={hidInput} className={`h-20 ${hidden === false ? "hidden" : ""} rounded-xl outline-none border text-white text-lg border-[white] w-[43rem] p-2 pl-4 placeholder:font-bold  bg-[#202124]`} placeholder='Take a note....' />
             <div className={`flex flex-col ${hidden ? "hidden" : ""} mt-4 border rounded-xl border-[#7c7a7a]`}>

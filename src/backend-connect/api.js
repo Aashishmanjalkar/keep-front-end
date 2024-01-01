@@ -2,35 +2,30 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:5000/api";
 
-// Your bearer token (replace 'your_token' with the actual token)
-
-
 export const fetchFromAPI = async (url,method,sendData = null,bearerToken = '')=> {
     try {
       let data = '';
-      // Set up the authorization header
-      // console.log("bearer " + bearerToken);
       const config = {
         headers: {
           'Authorization': `Bearer ${bearerToken}`,
           'Content-Type': 'application/json',
         },
       };
-        if (method === 'get') {
-          console.log(`${BASE_URL}/${url}`);
-          data = await axios.get(`${BASE_URL}/${url}`,config);
-        } else if(method === 'post') {
-          console.log("here");
-          console.log(`${BASE_URL}/${url}`);
-          data = await axios.post(`${BASE_URL}/${url}`,sendData,config);
-        } else if(method === 'put'){
-          console.log(`${BASE_URL}/${url}`);
-          data = await axios.put(`${BASE_URL}/${url}`,sendData,config);
-        }else if(method === 'delete'){
-          console.log(`${BASE_URL}/${url}`);
-          data = await axios.delete(`${BASE_URL}/${url}`,sendData,config);
+      const axiosMethod = method.toLowerCase(); // Ensure method is in lowercase
+        if (method === 'get' || method === 'delete' ) {
+          try {
+              data = await axios[axiosMethod](`${BASE_URL}/${url}`, config);
+          } catch (error) {
+              console.error(`Error during ${method.toUpperCase()} request:`, error.response || error.message || error);
+          }
+        } else if(method === 'post' || method === 'put'){
+          try {
+              data = await axios[axiosMethod](`${BASE_URL}/${url}`,sendData, config);
+          } catch (error) {
+              console.error(`Error during ${method.toUpperCase()} request:`, error.response || error.message || error);
+          }
         }
-        console.log("api js " , data);
+
         return data;
     } catch (error) {
       if (error.response) {
@@ -43,7 +38,6 @@ export const fetchFromAPI = async (url,method,sendData = null,bearerToken = '')=
           },
           'status':error.response.status,
         }
-        console.log(obj);
         return obj;
       } else if (error.request) {
 
